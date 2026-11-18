@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全方位學習大挑戰 (Life-Wide Learning Quest)</title>
+    <!-- Google Fonts for Cartoon Style -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Noto+Sans+HK:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF7B54;
+            --secondary: #FFB26B;
+            --accent: #FFD966;
+            --bg-light: #F4F9F9;
+            --card-bg: #FFFFFF;
+            --text-color: #2C3E50;
+            --success: #2ECC71;
+            --error: #E74C3C;
+            --border-radius: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans HK', sans-serif;
+        }
+
+        body {
+            background-color: #E8F0FE;
+            background-image: radial-gradient(#FFB26B 1.5px, transparent 1.5px), radial-gradient(#FF7B54 1.5px, #E8F0FE 1.5px);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12), 0 5px 15px rgba(0,0,0,0.05);
+            padding: 35px;
+            border: 6px solid #4A90E2;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .badge-header {
+            background: #4A90E2;
+            color: white;
+            text-align: center;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 0 #2172D6;
+        }
+
+        h1 {
+            color: #2C3E50;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 900;
+            text-shadow: 2px 2px 0px #E8F0FE;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #34495E;
+            font-size: 1.1rem;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 3px solid #CBD5E1;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: #4A90E2;
+            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.2);
+        }
+
+        .btn {
+            width: 100%;
+            background: #FF7B54;
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #D9532F;
+            transition: all 0.1s ease;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #FF6B3D;
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #D9532F;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #E2E8F0;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            height: 18px;
+            border: 2px solid #CBD5E1;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #FFB26B, #FF7B54);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 20px;
+        }
+
+        .q-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-weight: 700;
+            color: #7F8C8D;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #2C3E50;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            background: #F8FAFC;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 6px solid #4A90E2;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .option-btn {
+            background: #FFFFFF;
+            border: 3px solid #E2E8F0;
+            padding: 15px 20px;
+            border-radius: 12px;
+            text-align: left;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            border-color: #4A90E2;
+            background: #F0F7FF;
+            transform: translateX(4px);
+        }
+
+        .option-btn.correct {
+            border-color: var(--success) !important;
+            background: #E8F8F0 !important;
+            color: #1E8449 !important;
+        }
+
+        .option-btn.wrong {
+            border-color: var(--error) !important;
+            background: #FDEDEC !important;
+            color: #922B21 !important;
+        }
+
+        .feedback-banner {
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: none;
+        }
+        .feedback-banner.success {
+            background: #D4EFDF;
+            color: #196F3D;
+            border: 2px solid #2ECC71;
+        }
+        .feedback-banner.error {
+            background: #FADBD8;
+            color: #78281F;
+            border: 2px solid #E74C3C;
+        }
+
+        .explanation-box {
+            background: #FFF9E6;
+            border: 2px dashed #F1C40F;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .explanation-title {
+            font-weight: 900;
+            color: #D68910;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .explanation-text {
+            font-size: 0.98rem;
+            color: #5D4037;
+            line-height: 1.5;
+        }
+
+        .result-score {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #FF7B54;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .result-detail {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #475569;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div style="text-align: center;">
+        <span class="badge-header">🎒 香港教師專業發展小遊戲</span>
+    </div>
+
+    <!-- 登入畫面 -->
+    <div id="start-screen" class="screen active">
+        <h1>全方位學習大挑戰</h1>
+        <p style="text-align: center; color: #64748B; margin-bottom: 25px;">
+            歡迎參與！這個小遊戲旨在促進教師對《小學教育課程指引》分章八「全方位學習」概念的理解。
+        </p>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label for="school">學校簡稱 *</label>
+                <input type="text" id="school" required>
+            </div>
+            <div class="form-group">
+                <label for="teacher-name">教師姓名 *</label>
+                <input type="text" id="teacher-name" required>
+            </div>
+            <button type="submit" class="btn">開始挑戰 🚀</button>
+        </form>
+    </div>
+
+    <!-- 遊戲/題目畫面 -->
+    <div id="game-screen" class="screen">
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <div class="q-meta">
+            <span id="question-number">第 1 / 10 題</span>
+            <span id="player-display"></span>
+        </div>
+
+        <div class="question-text" id="question-text">
+            載入中...
+        </div>
+
+        <div class="options-grid" id="options-container">
+            <!-- 動態生成選項 -->
+        </div>
+
+        <!-- 答對/答錯回饋訊息 -->
+        <div id="feedback-banner" class="feedback-banner"></div>
+
+        <div class="explanation-box" id="explanation-box">
+            <div class="explanation-title">💡 解析與指引出處</div>
+            <div class="explanation-text" id="explanation-text"></div>
+        </div>
+
+        <button id="next-btn" class="btn" style="display: none;" onclick="nextQuestion()">下一題 ➔</button>
+    </div>
+
+    <!-- 結果畫面 -->
+    <div id="result-screen" class="screen">
+        <h1>🎉 挑戰完成！</h1>
+        <div class="result-score" id="final-score">0 / 10</div>
+        <div class="result-detail" id="result-message"></div>
+
+        <div style="background: #F8FAFC; padding: 20px; border-radius: 15px; margin-bottom: 25px; font-size: 0.95rem; color: #475569;">
+            📋 答題紀錄已自動上傳至 Google 數據分析庫。這些數據將有助評估教師在全方位學習上的難點與知識盲點，優化後續專業培訓計劃。
+        </div>
+
+        <button class="btn" onclick="location.reload()">再玩一次 🔄</button>
+    </div>
+</div>
+
+<script>
+// 已內置您的 Google Apps Script Web App URL
+const scriptUrl = "https://script.google.com/macros/s/AKfycbyHcEUkd3YgjToSh316f-CijmR3bC3RHKA8FI2TqVkeGz7x5ilslci7aof2NPmGj1KIRA/exec";
+
+// 10 題嚴格基於《小學教育課程指引》分章八
+const quizData = [
+    {
+        question: "根據《小學教育課程指引》分章八，學校應緊扣課程目標，將全方位學習策略融入各學習領域的學與教、跨課程學習和聯課活動中，這主要發揮著哪三種功能？",
+        options: [
+            "A. 延伸、擴闊、促進",
+            "B. 預習、深造、評估",
+            "C. 普及、甄選、分流",
+            "D. 鞏固、拔尖、補底"
+        ],
+        answer: 0,
+        explanation: "【指引頁 8-3 至 8-4】全方位學習發揮著「延伸」、「擴闊」及「促進」學生學習的功能，幫助學生深化知識、拓展視野及培養共通能力。"
+    },
+    {
+        question: "【是非題】全方位學習的形式多樣，它等同於課外活動，且不屬於學校課程的一部分。",
+        options: [
+            "A. 正確",
+            "B. 錯誤"
+        ],
+        answer: 1,
+        explanation: "【指引頁 8-3】錯誤！指引明確指出：全方位學習「不局限於課室之內，亦不等同於課外活動。它是學校課程的一部分，與各學習領域的課程關係密切，與課堂學習相輔相成。」"
+    },
+    {
+        question: "學生透過在不同情境的全方位學習機會，可獲取五種基要學習經歷。以下哪一選項完全正確？",
+        options: [
+            "A. 語文訓練、數學邏輯、科學探究、體藝發展、領袖培訓",
+            "B. 價值觀教育、智能發展、社會服務、體藝發展、與工作有關的經驗",
+            "C. 國民教育、STEAM教育、資訊科技、生涯規劃、課外活動",
+            "D. 德育、智育、體育、群育、美育"
+        ],
+        answer: 1,
+        explanation: "【指引頁 8-5】五種基要學習經歷包括：價值觀教育、智能發展、社會服務、體藝發展、以及與工作有關的經驗。"
+    },
+    {
+        question: "根據《小學教育課程指引》分章八，全方位學習強調學生在哪裡學習所得的切身體驗，以助掌握單靠課堂學習難以達到的學習目標？",
+        options: [
+            "A. 課室內的模擬情境中",
+            "B. 真實情境中",
+            "C. 補習社的考試環境中",
+            "D. 網上的虛擬實驗室中"
+        ],
+        answer: 1,
+        explanation: "【指引頁 8-2】全方位學習強調學生在「真實情境中」學習所得的切身體驗，能讓學生更有效掌握單靠課堂學習難以達到的學習目標（例如日常生活中解決問題的能力、正確價值觀等）。"
+    },
+    {
+        question: "以下哪一項不屬於推行全方位學習的七項主導原則之一？",
+        options: [
+            "A. 以實踐經驗為基礎",
+            "B. 學生為本",
+            "C. 專利或收費優先",
+            "D. 力求連貫與共同學習"
+        ],
+        answer: 2,
+        explanation: "【指引頁 8-9 至 8-10】七項主導原則包括：以實踐經驗為基礎、學生為本、提供均等機會、力求連貫、注重質素、彈性處理、共同學習。"
+    },
+    {
+        question: "文件將全方位學習的推行模式歸納為六種，以下哪一項包含在其中？",
+        options: [
+            "A. 課程整合模式",
+            "B. 應試導向培訓模式",
+            "C. 按學科成績分組模式",
+            "D. 補習抽離式模式"
+        ],
+        answer: 0,
+        explanation: "【指引頁 8-11】六種推行模式為：課程整合模式、事件為本模式、課節為本模式、全校主題式模式、專題項目為本模式及聯課活動為本模式。"
+    },
+    {
+        question: "【是非題】學生在全方位學習活動後進行反思，反思活動必須以書寫形式（如工作紙或檢討報告）進行，否則便失去學習意義。",
+        options: [
+            "A. 正確",
+            "B. 錯誤"
+        ],
+        answer: 1,
+        explanation: "【指引頁 8-15】錯誤！指引強調「反思未必一定要以書寫形式進行」。可以透過錄音、與同儕交談、簡報表達、小組討論解說、繪畫或短劇等多元形式進行。"
+    },
+    {
+        question: "在全方位學習的反思過程中，學生需要充足的空間和支援，可就哪三個範疇進行反思？",
+        options: [
+            "A. 活動費用開支、交通安排時間、場地大小",
+            "B. 聯繫以往相關的學習經歷、擴闊知識、檢視及重整已有的「知識」",
+            "C. 考試分數高低、名次排列、獲獎數量",
+            "D. 導師表現、天氣情況、膳食質素"
+        ],
+        answer: 1,
+        explanation: "【指引頁 8-15】反思的三大範疇為：1. 聯繫以往相關的學習經歷；2. 擴闊知識；3. 檢視及重整已有的「知識」。"
+    },
+    {
+        question: "【是非題】全方位學習和閱讀是相輔相成的。學生可在活動前透過閱讀進行預習或搜集資料，活動後透過閱讀對感興趣的課題作更深入探討。",
+        options: [
+            "A. 正確",
+            "B. 錯誤"
+        ],
+        answer: 0,
+        explanation: "【指引頁 8-18】正確！閱讀可增進知識，全方位學習的真實經歷和體驗可將書本上的知識更立體呈現，兩者的配合能夠深化學習。"
+    },
+    {
+        question: "根據《小學教育課程指引》分章八，全方位學習是一項有效幫助學生達成甚麼目標的重要策略？",
+        options: [
+            "A. 應付公開考試評核",
+            "B. 全人發展",
+            "C. 爭取學科排名第一",
+            "D. 減少學校行政工作"
+        ],
+        answer: 1,
+        explanation: "【指引頁 8-2】全方位學習亦是一項有效幫助學生全人發展的策略，能讓學生拓寬視野、照顧均衡發展。"
+    }
+];
+
+// Game State Variables
+let currentQuestion = 0;
+let score = 0;
+let userAnswers = [];
+let schoolName = "";
+let teacherName = "";
+
+// DOM Elements
+const loginForm = document.getElementById('login-form');
+const startScreen = document.getElementById('start-screen');
+const gameScreen = document.getElementById('game-screen');
+const resultScreen = document.getElementById('result-screen');
+const progressBar = document.getElementById('progress-bar');
+const questionNumber = document.getElementById('question-number');
+const playerDisplay = document.getElementById('player-display');
+const questionText = document.getElementById('question-text');
+const optionsContainer = document.getElementById('options-container');
+const feedbackBanner = document.getElementById('feedback-banner');
+const explanationBox = document.getElementById('explanation-box');
+const explanationText = document.getElementById('explanation-text');
+const nextBtn = document.getElementById('next-btn');
+
+// Start Game
+loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    schoolName = document.getElementById('school').value.trim();
+    teacherName = document.getElementById('teacher-name').value.trim();
+
+    startScreen.classList.remove('active');
+    gameScreen.classList.add('active');
+
+    playerDisplay.textContent = `👤 ${schoolName} - ${teacherName}`;
+    loadQuestion();
+});
+
+// Load Current Question
+function loadQuestion() {
+    const q = quizData[currentQuestion];
+    
+    // Update Progress
+    const progress = ((currentQuestion + 1) / quizData.length) * 100;
+    progressBar.style.width = `${progress}%`;
+    questionNumber.textContent = `第 ${currentQuestion + 1} / ${quizData.length} 題`;
+
+    // Reset UI
+    questionText.textContent = q.question;
+    optionsContainer.innerHTML = '';
+    feedbackBanner.style.display = 'none';
+    explanationBox.style.display = 'none';
+    nextBtn.style.display = 'none';
+
+    // Generate Options
+    q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt;
+        btn.onclick = () => selectOption(idx);
+        optionsContainer.appendChild(btn);
+    });
+}
+
+// Select Option
+function selectOption(selectedIndex) {
+    const q = quizData[currentQuestion];
+    const buttons = optionsContainer.getElementsByClassName('option-btn');
+
+    // Disable all buttons after selection
+    for (let btn of buttons) {
+        btn.disabled = true;
+    }
+
+    const isCorrect = (selectedIndex === q.answer);
+    
+    // Setup Feedback Message
+    if (isCorrect) {
+        score++;
+        buttons[selectedIndex].classList.add('correct');
+        
+        const praises = [
+            "🌟 太棒了！您對全方位學習的觀念掌握得精準透徹！",
+            "🎉 答對了！真厲害，您的教育專業根基非常扎實！",
+            "👏 幹得好！完全抓住了《課程指引》的核心精神！",
+            "✨ 太優秀了！答題正確，對全方位學習的理解相當到位！"
+        ];
+        const randomPraise = praises[Math.floor(Math.random() * praises.length)];
+        
+        feedbackBanner.className = "feedback-banner success";
+        feedbackBanner.innerHTML = `${randomPraise}`;
+    } else {
+        buttons[selectedIndex].classList.add('wrong');
+        buttons[q.answer].classList.add('correct'); // Highlight correct answer
+        
+        const correctOptText = q.options[q.answer];
+        const encouragements = [
+            "💪 沒關係！教育路上互相切磋，吸收新知後會更得心應手！",
+            "🌱 失敗乃成功之母，這題比較細微，了解正確概念後就學會囉！",
+            "💡 別灰心！釐清這個觀念後，對推動全方位學習會更有幫助！",
+            "🎯 沒問題的！看過指引解析後，下次一定能答對！加油！"
+        ];
+        const randomEncourage = encouragements[Math.floor(Math.random() * encouragements.length)];
+
+        feedbackBanner.className = "feedback-banner error";
+        feedbackBanner.innerHTML = `❌ 答錯囉！正確答案是：<strong>${correctOptText}</strong><br><span style="font-size: 0.95rem; margin-top: 5px; display:inline-block;">${randomEncourage}</span>`;
+    }
+
+    feedbackBanner.style.display = 'block';
+
+    // Record user answer
+    userAnswers.push({
+        qIndex: currentQuestion + 1,
+        selected: selectedIndex,
+        isCorrect: isCorrect
+    });
+
+    // Show Explanation
+    explanationText.textContent = q.explanation;
+    explanationBox.style.display = 'block';
+
+    // Show Next Button
+    nextBtn.style.display = 'block';
+}
+
+// Next Question or Finish
+function nextQuestion() {
+    currentQuestion++;
+    if (currentQuestion < quizData.length) {
+        loadQuestion();
+    } else {
+        showResults();
+    }
+}
+
+// Show Results & Submit Data
+function showResults() {
+    gameScreen.classList.remove('active');
+    resultScreen.classList.add('active');
+
+    document.getElementById('final-score').textContent = `${score} / ${quizData.length}`;
+
+    let msg = "";
+    if (score === 10) msg = "🌟 滿分！您對《全方位學習》指引有極為深厚且精準的專業理解！";
+    else if (score >= 7) msg = "👏 優秀！您對全方位學習的概念、原則與推行模式相當熟悉。";
+    else msg = "💪 感謝參與！您可以藉由各題解析回顧《課程指引》重點，為校本課程規劃奠定更扎實的基礎。";
+    
+    document.getElementById('result-message').textContent = msg;
+
+    // Send Data to Google Sheet automatically
+    sendDataToGoogleSheet();
+}
+
+// Send Data via Google Apps Script API
+function sendDataToGoogleSheet() {
+    const payload = {
+        timestamp: new Date().toISOString(),
+        school: schoolName,
+        name: teacherName,
+        score: score,
+        answers: userAnswers
+    };
+
+    fetch(scriptUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    }).then(() => {
+        console.log("數據成功傳送至 Google Sheet");
+    }).catch(err => {
+        console.error("傳送數據失敗：", err);
+    });
+}
+</script>
+
+</body>
+</html>
